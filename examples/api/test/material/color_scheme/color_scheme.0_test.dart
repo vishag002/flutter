@@ -30,9 +30,14 @@ void main() {
       );
     }
     expect(coloredBox().color, const Color(0xff65558f));
+<<<<<<< HEAD
     await tester.tap(find.byType(MenuAnchor));
+=======
+    await tester.tap(find.byType(example.SettingsButton));
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(MenuItemButton, 'Yellow'));
+    expect(find.text('Settings'), findsOneWidget);
+    await tester.tap(find.byType(IconButton).at(6));
     await tester.pumpAndSettle();
 
     expect(coloredBox().color, const Color(0xFF685F12));

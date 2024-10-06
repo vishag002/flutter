@@ -279,9 +279,21 @@ class ColorScheme with Diagnosticable {
   /// If the resulting color scheme is too dark, consider setting `dynamicSchemeVariant`
   /// to [DynamicSchemeVariant.fidelity], whose palettes match the seed color.
   ///
+<<<<<<< HEAD
   /// {@tool dartpad}
   /// This sample shows how to use [ColorScheme.fromSeed] to create dynamic
   /// color schemes with different [DynamicSchemeVariant]s.
+=======
+  /// The `contrastLevel` parameter indicates the contrast level between color
+  /// pairs, such as [primary] and [onPrimary]. 0.0 is the default (normal);
+  /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
+  /// medium and high contrast correspond to 0.5 and 1.0 respectively.
+  ///
+  /// {@tool dartpad}
+  /// This sample shows how to use [ColorScheme.fromSeed] to create dynamic
+  /// color schemes with different [DynamicSchemeVariant]s and different
+  /// contrast level.
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
   ///
   /// ** See code in examples/api/lib/material/color_scheme/color_scheme.0.dart **
   /// {@end-tool}
@@ -296,6 +308,10 @@ class ColorScheme with Diagnosticable {
     required Color seedColor,
     Brightness brightness = Brightness.light,
     DynamicSchemeVariant dynamicSchemeVariant = DynamicSchemeVariant.tonalSpot,
+<<<<<<< HEAD
+=======
+    double contrastLevel = 0.0,
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
     Color? primary,
     Color? onPrimary,
     Color? primaryContainer,
@@ -352,8 +368,12 @@ class ColorScheme with Diagnosticable {
         'This feature was deprecated after v3.18.0-0.1.pre.')
     Color? surfaceVariant,
   }) {
+<<<<<<< HEAD
     final DynamicScheme scheme =
         _buildDynamicScheme(brightness, seedColor, dynamicSchemeVariant);
+=======
+    final DynamicScheme scheme = _buildDynamicScheme(brightness, seedColor, dynamicSchemeVariant, contrastLevel);
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
 
     return ColorScheme(
       primary: primary ?? Color(MaterialDynamicColors.primary.getArgb(scheme)),
@@ -709,7 +729,8 @@ class ColorScheme with Diagnosticable {
   /// This constructor shouldn't be used to update the Material 3 color scheme.
   ///
   /// For Material 3, use [ColorScheme.fromSeed] to create a color scheme
-  /// from a single seed color based on the Material 3 color system.
+  /// from a single seed color based on the Material 3 color system. To create a
+  /// high-contrast color scheme, set `contrastLevel` to 1.0.
   ///
   /// {@tool snippet}
   /// This example demonstrates how to create a color scheme similar to [ColorScheme.highContrastLight]
@@ -834,7 +855,8 @@ class ColorScheme with Diagnosticable {
   /// For Material 3, use [ColorScheme.fromSeed] to create a color scheme
   /// from a single seed color based on the Material 3 color system.
   /// Override the `brightness` property of [ColorScheme.fromSeed] to create a
-  /// dark color scheme.
+  /// dark color scheme. To create a high-contrast color scheme, set
+  /// `contrastLevel` to 1.0.
   ///
   /// {@tool snippet}
   /// This example demonstrates how to create a color scheme similar to [ColorScheme.highContrastDark]
@@ -1178,7 +1200,7 @@ class ColorScheme with Diagnosticable {
   /// <https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html>.
   Color get onErrorContainer => _onErrorContainer ?? onError;
 
-  /// The background color for widgets like [Card].
+  /// The background color for widgets like [Scaffold].
   final Color surface;
 
   /// A color that's clearly legible when drawn on [surface].
@@ -1785,6 +1807,10 @@ class ColorScheme with Diagnosticable {
     required ImageProvider provider,
     Brightness brightness = Brightness.light,
     DynamicSchemeVariant dynamicSchemeVariant = DynamicSchemeVariant.tonalSpot,
+<<<<<<< HEAD
+=======
+    double contrastLevel = 0.0,
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
     Color? primary,
     Color? onPrimary,
     Color? primaryContainer,
@@ -1852,8 +1878,12 @@ class ColorScheme with Diagnosticable {
     final List<int> scoredResults = Score.score(colorToCount, desired: 1);
     final ui.Color baseColor = Color(scoredResults.first);
 
+<<<<<<< HEAD
     final DynamicScheme scheme =
         _buildDynamicScheme(brightness, baseColor, dynamicSchemeVariant);
+=======
+    final DynamicScheme scheme = _buildDynamicScheme(brightness, baseColor, dynamicSchemeVariant, contrastLevel);
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
 
     return ColorScheme(
       primary: primary ?? Color(MaterialDynamicColors.primary.getArgb(scheme)),
@@ -2037,6 +2067,7 @@ class ColorScheme with Diagnosticable {
     return (abgr & exceptRMask & exceptBMask) | (b << 16) | r;
   }
 
+<<<<<<< HEAD
   static DynamicScheme _buildDynamicScheme(Brightness brightness,
       Color seedColor, DynamicSchemeVariant schemeVariant) {
     final bool isDark = brightness == Brightness.dark;
@@ -2060,6 +2091,30 @@ class ColorScheme with Diagnosticable {
           sourceColorHct: sourceColor, isDark: isDark, contrastLevel: 0.0),
       DynamicSchemeVariant.fruitSalad => SchemeFruitSalad(
           sourceColorHct: sourceColor, isDark: isDark, contrastLevel: 0.0),
+=======
+  static DynamicScheme _buildDynamicScheme(
+    Brightness brightness,
+    Color seedColor,
+    DynamicSchemeVariant schemeVariant,
+    double contrastLevel,
+  ) {
+    assert(
+      contrastLevel >= -1.0 && contrastLevel <= 1.0,
+      'contrastLevel must be between -1.0 and 1.0 inclusive.',
+    );
+    final bool isDark = brightness == Brightness.dark;
+    final Hct sourceColor =  Hct.fromInt(seedColor.value);
+    return switch (schemeVariant) {
+      DynamicSchemeVariant.tonalSpot => SchemeTonalSpot(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.fidelity => SchemeFidelity(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.content => SchemeContent(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.monochrome => SchemeMonochrome(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.neutral => SchemeNeutral(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.vibrant => SchemeVibrant(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.expressive => SchemeExpressive(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.rainbow => SchemeRainbow(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+      DynamicSchemeVariant.fruitSalad => SchemeFruitSalad(sourceColorHct: sourceColor, isDark: isDark, contrastLevel: contrastLevel),
+>>>>>>> 2663184aa79047d0a33a14a3b607954f8fdd8730
     };
   }
 }
